@@ -49,11 +49,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun putNumber(number:String) {
-        display(number)
+        addStringToExpression(number)
     }
 
     private fun putOperator(operator:String) {
-        display(operator)
+        addStringToExpression(operator)
     }
 
     private fun setNegative() {
@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun doClean() {
-
+        txtRslt.setText("")
     }
 
     private fun setBracket() {
@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun display(char:String) {
+    private fun addStringToExpression(char:String) {
         // TODO SpannableString
         txtRslt.setText(txtRslt.text.toString() + char)
     }
@@ -91,12 +91,12 @@ class MainActivity : AppCompatActivity() {
             var sbExpression:StringBuffer = StringBuffer()
             sbExpression.append(expression.substring(0, startIdx))
             sbExpression.append(calculator(subExpression))
-            sbExpression.append(expression.substring(0, startIdx))
+            sbExpression.append(expression.substring(endIdx, expression.length))
 
             expression = sbExpression.toString()
         }
 
-        if ( expression.indexOf('(') >= 0 ) {
+        if ( expression.indexOf(MULTIPLY) >= 0 ) {
             val startIdx = expression.indexOf('(')
             val endIdx = expression.lastIndexOf(')')
             val subExpression = expression.substring(startIdx+1, endIdx)
