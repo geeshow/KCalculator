@@ -7,13 +7,99 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
+
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello World!!!"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:id="@+id/txtRslt"
+            android:layout_width="0dp" android:layout_height="40dp" android:layout_margin="8dp"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+            android:id="@+id/btn7" android:text="@string/btn7"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintHorizontal_weight="1" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toStartOf="@id/btn8"
+            app:layout_constraintTop_toBottomOf="@id/txtRslt"/>
+    <Button
+            android:id="@+id/btn8" android:text="@string/btn8"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_weight="1" app:layout_constraintStart_toEndOf="@id/btn7" app:layout_constraintEnd_toStartOf="@id/btn9"
+            app:layout_constraintBaseline_toBaselineOf="@+id/btn7"/>
+    <Button
+            android:id="@+id/btn9" android:text="@string/btn9"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_weight="1" app:layout_constraintStart_toEndOf="@id/btn8" app:layout_constraintEnd_toStartOf="@id/btnMulti"
+            app:layout_constraintBaseline_toBaselineOf="@+id/btn7"/>
+    <Button
+            android:id="@+id/btnMulti" android:text="@string/btnMulti"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_weight="1" app:layout_constraintStart_toEndOf="@id/btn9" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBaseline_toBaselineOf="@+id/btn7"/>
+
+
+    <Button
+            android:id="@+id/btn4" android:text="@string/btn4"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_weight="1" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toStartOf="@id/btn5"
+            app:layout_constraintTop_toBottomOf="@+id/btn7"/>
+    <Button
+            android:id="@+id/btn5" android:text="@string/btn5"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_weight="1" app:layout_constraintStart_toEndOf="@id/btn4" app:layout_constraintEnd_toStartOf="@id/btn6"
+            app:layout_constraintBaseline_toBaselineOf="@+id/btn4"/>
+    <Button
+            android:id="@+id/btn6" android:text="@string/btn6"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_weight="1" app:layout_constraintStart_toEndOf="@id/btn5" app:layout_constraintEnd_toStartOf="@id/btnMinus"
+            app:layout_constraintBaseline_toBaselineOf="@+id/btn4"/>
+    <Button
+            android:id="@+id/btnMinus" android:text="@string/btnMinus"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_weight="1" app:layout_constraintStart_toEndOf="@id/btn6" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBaseline_toBaselineOf="@+id/btn4"/>
+
+    <Button
+            android:id="@+id/btn1" android:text="@string/btn1"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_weight="1" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toStartOf="@+id/btn2"
+            app:layout_constraintTop_toBottomOf="@+id/btn4"/>
+    <Button
+            android:id="@+id/btn2" android:text="@string/btn2"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_weight="1" app:layout_constraintStart_toEndOf="@id/btn1" app:layout_constraintEnd_toStartOf="@+id/btn3"
+            app:layout_constraintBaseline_toBaselineOf="@+id/btn1"/>
+    <Button
+            android:id="@+id/btn3" android:text="@string/btn3"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_weight="1" app:layout_constraintStart_toEndOf="@id/btn2" app:layout_constraintEnd_toStartOf="@+id/btnPlus"
+            app:layout_constraintBaseline_toBaselineOf="@+id/btn1"/>
+    <Button
+            android:id="@+id/btnPlus" android:text="@string/btnPlus"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_weight="1" app:layout_constraintStart_toEndOf="@id/btn3" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBaseline_toBaselineOf="@+id/btn1"/>
+
+    <Button
+            android:id="@+id/btnNegative" android:text="@string/btnNegative"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_weight="1" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toStartOf="@id/btn0"
+            app:layout_constraintTop_toBottomOf="@id/btn1"/>
+    <Button
+            android:id="@+id/btn0" android:text="@string/btn0"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_weight="1" app:layout_constraintStart_toEndOf="@id/btnNegative" app:layout_constraintEnd_toStartOf="@id/btnDot"
+            app:layout_constraintBaseline_toBaselineOf="@id/btnNegative"/>
+    <Button
+            android:id="@+id/btnDot" android:text="@string/btnDot"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_weight="1" app:layout_constraintStart_toEndOf="@id/btn0" app:layout_constraintEnd_toStartOf="@id/btnCal"
+            app:layout_constraintBaseline_toBaselineOf="@id/btnNegative"/>
+    <Button
+            android:id="@+id/btnCal" android:text="@string/btnCal"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_weight="1" app:layout_constraintStart_toEndOf="@id/btnDot" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBaseline_toBaselineOf="@id/btnNegative"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
