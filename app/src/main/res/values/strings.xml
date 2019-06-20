@@ -11,13 +11,17 @@
     <string name="btn7" translatable="false">7</string>
     <string name="btn8" translatable="false">8</string>
     <string name="btn9" translatable="false">9</string>
-    <string name="btnDot" translatable="false">．</string>
+    <string name="btnDecimal" translatable="false">．</string>
     <string name="btnPlus" translatable="false">＋</string>
     <string name="btnMinus" translatable="false">－</string>
     <string name="btnDiv" translatable="false">÷</string>
     <string name="btnMulti" translatable="false">×</string>
     <string name="btnNegative" translatable="false">±</string>
     <string name="btnClean" translatable="false">C</string>
-    <string name="btnCE" translatable="false">CE</string>
-    <string name="btnCal" translatable="false">=</string>
+    <string name="btnEqual" translatable="false">=</string>
+    <string name="btnBracket" translatable="false">()</string>
+    <string name="btnPercent" translatable="false">%</string>
+    <string name="btnDivide" translatable="false">/</string>
+    <string name="notImplemented" translatable="true">구현되지 않은 버튼</string>
+    <string name="defaultResult" translatable="false">0</string>
 </resources>
