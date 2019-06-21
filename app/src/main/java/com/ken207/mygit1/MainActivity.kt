@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.StringBuilder
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
@@ -81,7 +84,30 @@ class MainActivity : AppCompatActivity() {
         txtRslt.setText(txtRslt.text.toString() + char)
     }
 
+    private fun addOperatorToStack(arrStack:ArrayList<Int>, operator:Char) {
+
+    }
     private fun calculator(reqExpression:String) {
+
+        var arrPostFix = ArrayList<String>()
+        var arrStack = ArrayList<Int>()
+        var sbOperand:StringBuffer = StringBuffer()
+        val expLength : Int = reqExpression.length
+
+        reqExpression.forEachIndexed { index, it ->
+            when (it) {
+                in '0' .. '9' -> sbOperand.append(it)
+                else -> arrPostFix.add(sbOperand.toString())
+            }
+
+            when (it) {
+                '+' -> arrStack.add(1)
+                '-' -> arrStack.add(2)
+
+            }
+
+        }
+
         var expression:String = reqExpression
         if ( expression.indexOf(L_BRACKET) >= 0 ) {
             val startIdx = expression.indexOf(L_BRACKET)
@@ -103,6 +129,7 @@ class MainActivity : AppCompatActivity() {
 
             calculator(subExpression)
         }
+
 
     }
 }
