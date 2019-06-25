@@ -6,10 +6,10 @@ import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.StringBuilder
-import java.util.*
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
+    private var myCalc:Calculator = Calculator()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun doCalculate() {
-        calculator(txtRslt.text.toString())
+        myCalc.calc(txtRslt.text.toString())
     }
 
     private fun doClean() {
@@ -82,77 +82,6 @@ class MainActivity : AppCompatActivity() {
     private fun addStringToExpression(char:String) {
         // TODO SpannableString
         txtRslt.setText(txtRslt.text.toString() + char)
-    }
-
-    private fun chkAndAddTempStack(arrTempStack:ArrayList<Char>, operator:Char) {
-        val stackSize : Int = arrTempStack.size
-        if ( stackSize == 0 ) {
-            arrTempStack.add(operator)
-        } else {
-            val preOp: Char = arrTempStack.last()
-            if (preOp == '+' || preOp == '-') {
-                arrTempStack.removeAt(stackSize - 1)
-                arrTempStack.add(operator)
-                arrTempStack.add(preOp)
-            }
-            else {
-                arrTempStack.add(operator)
-            }
-        }
-    }
-
-    private fun changeInfixToPostfix(arrInfix:ArrayList<String>) {
-        var arrPostFix = ArrayList<String>()
-        var arrTempStack = ArrayList<Char>()
-
-
-    }
-    private fun calculator(reqExpression:String) {
-
-        var arrInfix = ArrayList<String>()
-
-        var sbOperand:StringBuilder = StringBuilder()
-
-        reqExpression.forEachIndexed { index, it ->
-            when (it) {
-                in '0' .. '9' -> sbOperand.append(it)
-                else -> {
-                    if (sbOperand.isNotEmpty()) {
-                        arrInfix.add(sbOperand.toString())
-                        sbOperand.clear()
-                    }
-                    arrInfix.add(it.toString())
-                }
-            }
-        }
-
-//        when (it) {
-//            '+', '-' -> arrTempStack.add(it)
-//            'x', '/' -> chkAndAddTempStack(arrTempStack, it)
-//        }
-//        var expression:String = reqExpression
-//        if ( expression.indexOf(L_BRACKET) >= 0 ) {
-//            val startIdx = expression.indexOf(L_BRACKET)
-//            val endIdx = expression.lastIndexOf(R_BRACKET)
-//            val subExpression = expression.substring(startIdx+1, endIdx)
-//
-//            var sbExpression:StringBuffer = StringBuffer()
-//            sbExpression.append(expression.substring(0, startIdx))
-//            sbExpression.append(calculator(subExpression))
-//            sbExpression.append(expression.substring(endIdx, expression.length))
-//
-//            expression = sbExpression.toString()
-//        }
-
-//        if ( expression.indexOf(MULTIPLY) >= 0 ) {
-//            val startIdx = expression.indexOf('(')
-//            val endIdx = expression.lastIndexOf(')')
-//            val subExpression = expression.substring(startIdx+1, endIdx)
-//
-//            calculator(subExpression)
-//        }
-
-
     }
 }
 
