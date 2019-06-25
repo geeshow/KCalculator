@@ -2,15 +2,48 @@ package com.ken207.mygit1
 
 import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.StringBuilder
+import java.math.BigDecimal
+import java.math.MathContext
+import java.util.*
+import kotlin.collections.ArrayList
 
 class Calculator {
 
     init {
     }
 
-    fun calc(infixFormula:String) {
+    fun calc(infixFormula:String): BigDecimal? {
         val arrInfix:ArrayList<String> = splitStringToArray(infixFormula)
         val arrPostfix:ArrayList<String> = changeInfixToPostfix(arrInfix)
+
+        val arrStackForCalculator:Stack<BigDecimal> = Stack()
+        arrPostfix.forEach{
+            if ( it == MULTIPLY ) {
+                arrStackForCalculator.push(
+                    arrStackForCalculator.pop().multiply(arrStackForCalculator.pop())
+                )
+            }
+            else if ( it == DIVIDE ) {
+                arrStackForCalculator.push(
+                    arrStackForCalculator.pop().divide(arrStackForCalculator.pop(), MathContext.UNLIMITED)
+                )
+            }
+            else if ( it == PLUS ) {
+                arrStackForCalculator.push(
+                    arrStackForCalculator.pop().plus(arrStackForCalculator.pop())
+                )
+            }
+            else if ( it == MINUS ) {
+                arrStackForCalculator.push(
+                    arrStackForCalculator.pop().minus(arrStackForCalculator.pop())
+                )
+            }
+            else {
+                arrStackForCalculator.push(BigDecimal(it))
+            }
+        }
+
+        return arrStackForCalculator.pop()
     }
 
     public fun splitStringToArray(reqExpression:String): ArrayList<String> {
@@ -41,16 +74,16 @@ class Calculator {
         var numBracketDepth:Int = 0
 
         arrInfix.forEach { it->
-            if ( numBracketDepth == 0 && it in setOf("+","-") ) {
+            if ( numBracketDepth == 0 && it in setOf(PLUS,MINUS) ) {
                 arrTempStack.add(it)
             }
-            else if ( numBracketDepth == 0 && it in setOf("*","/") ) {
+            else if ( numBracketDepth == 0 && it in setOf(MULTIPLY,DIVIDE) ) {
                 chkAndAddTempStack(arrTempStack, it)
             }
-            else if ( it == "(" ) {
+            else if ( it == L_BRACKET ) {
                 numBracketDepth++
             }
-            else if ( it == ")" ) {
+            else if ( it == R_BRACKET ) {
                 numBracketDepth--
 
                 if ( numBracketDepth == 0 ) {
@@ -75,7 +108,7 @@ class Calculator {
             arrTempStack.add(operator)
         } else {
             val preOp: String = arrTempStack.last()
-            if ((preOp == "*" || preOp == "/") && (operator == "+" || operator == "-")) {
+            if ((preOp == MULTIPLY || preOp == DIVIDE) && (operator == PLUS || operator == MINUS)) {
                 arrTempStack.set(stackSize - 1, operator)
                 arrTempStack.add(preOp)
             } else {

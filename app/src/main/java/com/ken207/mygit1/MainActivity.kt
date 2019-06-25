@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun putZero() {
-        if ( txtRslt.text.toString() != "0" )
+        if ( txtFormula.text.toString() != "0" )
             putNumber("0")
     }
 
@@ -64,11 +64,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun doCalculate() {
-        myCalc.calc(txtRslt.text.toString())
+        txtRslt.setText(
+            myCalc.calc(txtFormula.text.toString()).toString()
+        )
     }
 
     private fun doClean() {
-        txtRslt.setText("")
+        txtFormula.setText("0")
     }
 
     private fun setBracket() {
@@ -81,7 +83,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun addStringToExpression(char:String) {
         // TODO SpannableString
-        txtRslt.setText(txtRslt.text.toString() + char)
+        txtFormula.setText(txtFormula.text.toString() + char)
     }
 }
 

@@ -7,18 +7,30 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
+    <EditText
+            android:id="@+id/txtFormula"
+            android:layout_width="0dp" android:layout_height="wrap_content" android:layout_margin="8dp"
+            android:gravity="end"
+            android:textSize="36sp"
+            android:text="@string/defaultResult"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" tools:text="123" android:textColorLink="#00EB0909"
+            android:textColor="#333"
+            app:fontFamily="sans-serif-smallcaps"/>
 
     <TextView
             android:id="@+id/txtRslt"
             android:layout_width="0dp" android:layout_height="40dp" android:layout_margin="8dp"
             android:gravity="end"
             android:textSize="26sp"
-            android:text="@string/defaultResult"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtFormula"
             app:layout_constraintEnd_toEndOf="parent" tools:text="123" android:textColorLink="#00EB0909"
-            android:textColor="#F44336"/>
+            android:textColor="#AAA"
+            app:fontFamily="sans-serif-smallcaps"/>
 
     <Button
             android:id="@+id/btnClean" android:text="@string/btnClean"
