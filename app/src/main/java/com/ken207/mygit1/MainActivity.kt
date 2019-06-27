@@ -5,11 +5,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.StringBuilder
-import kotlin.collections.ArrayList
-import android.text.Selection.getSelectionEnd
-import android.text.Selection.getSelectionStart
-
 
 
 class MainActivity : AppCompatActivity() {
@@ -77,7 +72,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun doClean() {
-        setFormula("0")
+//        setFormula("0")
+        Toast.makeText(this@MainActivity, txtFormula.getSelectionStart().toString() + ":" + txtFormula.getSelectionEnd().toString(), Toast.LENGTH_LONG).show()
     }
 
     private fun setBracket() {
@@ -92,15 +88,52 @@ class MainActivity : AppCompatActivity() {
         return txtFormula.text.toString()
     }
 
-    private fun addFormula(str:String) {
-        val s = Math.max(txtFormula.getSelectionStart(), 0)
-        val e = Math.max(txtFormula.getSelectionEnd(), 0)
-        txtFormula.getText().replace(Math.min(s, e), Math.max(s, e), str, 0, str.length);
+    private fun addFormula(addStr:String) {
+        var idxSelectionStart:Int = txtFormula.getSelectionStart()
+        var idxSelectionEnd = txtFormula.getSelectionEnd()
+
+        if ( idxSelectionStart == 0 ) {
+            if ( !checkAllowCharAtFirst(addStr.first()) )
+                return
+        }
+        else {
+            val leftSideChar:Char = txtFormula.text.get(idxSelectionStart - 1)
+            val leftSideInput:Char = addStr.first()
+
+            if ( isOperator(leftSideChar) && isOperator(leftSideInput) ) {
+                idxSelectionStart--
+            }
+        }
+
+        if ( idxSelectionEnd != txtFormula.text.lastIndex ) {
+            val rightSideChar:Char = txtFormula.text.get(idxSelectionEnd + 1)
+            val rightSideInput:Char = addStr.last()
+
+            if ( isOperator(rightSideChar) && isOperator(rightSideInput) ) {
+                idxSelectionEnd++
+            }
+        }
+
+        txtFormula.getText().replace(idxSelectionStart, idxSelectionEnd, addStr)
     }
 
     private fun setFormula(char:String) {
         // TODO SpannableString
         txtFormula.setText(char)
+    }
+
+    private fun checkAllowCharAtFirst(char:Char):Boolean {
+        if ( char.toString() in setOf(MULTIPLY, DIVIDE, PLUS, MINUS, R_BRACKET, "0"))
+            return false
+
+        return true
+    }
+
+    private fun isOperator(char:Char):Boolean {
+        if ( char.toString() in setOf(MULTIPLY, DIVIDE, PLUS, MINUS))
+            return false
+
+        return true
     }
 }
 
