@@ -18,7 +18,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent" tools:text="123" android:textColorLink="#00EB0909"
             android:textColor="#333"
-            app:fontFamily="sans-serif-smallcaps"/>
+            app:fontFamily="@font/aclonica"/>
 
     <TextView
             android:id="@+id/txtRslt"
@@ -30,7 +30,7 @@
             app:layout_constraintTop_toBottomOf="@id/txtFormula"
             app:layout_constraintEnd_toEndOf="parent" tools:text="123" android:textColorLink="#00EB0909"
             android:textColor="#AAA"
-            app:fontFamily="sans-serif-smallcaps"/>
+            app:fontFamily="@font/aclonica"/>
 
     <Button
             android:id="@+id/btnClean" android:text="@string/btnClean"

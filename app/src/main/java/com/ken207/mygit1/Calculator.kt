@@ -17,25 +17,30 @@ class Calculator {
         val arrPostfix:ArrayList<String> = changeInfixToPostfix(arrInfix)
 
         val arrStackForCalculator:Stack<BigDecimal> = Stack()
+        var operand:BigDecimal = BigDecimal.ZERO
         arrPostfix.forEach{
             if ( it == MULTIPLY ) {
+                operand = arrStackForCalculator.pop()
                 arrStackForCalculator.push(
-                    arrStackForCalculator.pop().multiply(arrStackForCalculator.pop())
+                    arrStackForCalculator.pop().multiply(operand)
                 )
             }
             else if ( it == DIVIDE ) {
+                operand = arrStackForCalculator.pop()
                 arrStackForCalculator.push(
-                    arrStackForCalculator.pop().divide(arrStackForCalculator.pop(), MathContext.UNLIMITED)
+                    arrStackForCalculator.pop().divide(operand, MathContext.UNLIMITED)
                 )
             }
             else if ( it == PLUS ) {
+                operand = arrStackForCalculator.pop()
                 arrStackForCalculator.push(
-                    arrStackForCalculator.pop().plus(arrStackForCalculator.pop())
+                    arrStackForCalculator.pop().plus(operand)
                 )
             }
             else if ( it == MINUS ) {
+                operand = arrStackForCalculator.pop()
                 arrStackForCalculator.push(
-                    arrStackForCalculator.pop().minus(arrStackForCalculator.pop())
+                    arrStackForCalculator.pop().minus(operand)
                 )
             }
             else {
