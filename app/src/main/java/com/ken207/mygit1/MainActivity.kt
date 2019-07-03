@@ -17,6 +17,8 @@ class MainActivity : AppCompatActivity() {
         listOf(btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btnMulti, btnMinus, btnPlus, btnNegative, btnDecimal, btnEqual,btnClean,btnBracket,btnPercent,btnDivide).forEach {
             it.setOnClickListener { clickButton(it) }
         }
+
+        doClean()
     }
 
     private fun clickButton(btnNum: View) {
@@ -72,8 +74,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun doClean() {
-//        setFormula("0")
         Toast.makeText(this@MainActivity, txtFormula.getSelectionStart().toString() + ":" + txtFormula.getSelectionEnd().toString(), Toast.LENGTH_LONG).show()
+        setFormula("0")
     }
 
     private fun setBracket() {
@@ -105,7 +107,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        if ( idxSelectionEnd != txtFormula.text.lastIndex ) {
+        if ( idxSelectionEnd != txtFormula.text.length ) {
             val rightSideChar:Char = txtFormula.text.get(idxSelectionEnd + 1)
             val rightSideInput:Char = addStr.last()
 
@@ -115,11 +117,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         txtFormula.getText().replace(idxSelectionStart, idxSelectionEnd, addStr)
+        txtFormula.setSelection(idxSelectionStart+addStr.length,idxSelectionStart+addStr.length)
     }
 
     private fun setFormula(char:String) {
         // TODO SpannableString
         txtFormula.setText(char)
+        txtFormula.setSelection(txtFormula.text.length,txtFormula.text.length)
     }
 
     private fun checkAllowCharAtFirst(char:Char):Boolean {
@@ -131,9 +135,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun isOperator(char:Char):Boolean {
         if ( char.toString() in setOf(MULTIPLY, DIVIDE, PLUS, MINUS))
-            return false
+            return true
 
-        return true
+        return false
     }
 }
 

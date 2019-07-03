@@ -74,13 +74,13 @@ class Calculator {
 
     public fun changeInfixToPostfix(arrInfix:ArrayList<String>):ArrayList<String> {
         val arrPostfix = ArrayList<String>()
-        val arrTempStack = ArrayList<String>()
+        val arrTempStack = Stack<String>()
         val tempSubExpression:ArrayList<String> = ArrayList()
         var numBracketDepth:Int = 0
 
         arrInfix.forEach { it->
             if ( numBracketDepth == 0 && it in setOf(PLUS,MINUS) ) {
-                arrTempStack.add(it)
+                arrTempStack.push(it)
             }
             else if ( numBracketDepth == 0 && it in setOf(MULTIPLY,DIVIDE) ) {
                 chkAndAddTempStack(arrTempStack, it)
@@ -103,21 +103,23 @@ class Calculator {
             }
         }
 
-        arrPostfix.addAll(arrTempStack.reversed())
+        while ( !arrTempStack.empty() ) {
+            arrPostfix.add(arrTempStack.pop())
+        }
+
         return arrPostfix
     }
 
-    public fun chkAndAddTempStack(arrTempStack:ArrayList<String>, operator:String) {
-        val stackSize: Int = arrTempStack.size
-        if (stackSize == 0) {
-            arrTempStack.add(operator)
+    public fun chkAndAddTempStack(arrTempStack:Stack<String>, operator:String) {
+        if ( arrTempStack.empty() ) {
+            arrTempStack.push(operator)
         } else {
-            val preOp: String = arrTempStack.last()
+            val preOp: String = arrTempStack.pop()
             if ((preOp == MULTIPLY || preOp == DIVIDE) && (operator == PLUS || operator == MINUS)) {
-                arrTempStack.set(stackSize - 1, operator)
-                arrTempStack.add(preOp)
+                arrTempStack.push(operator)
+                arrTempStack.push(preOp)
             } else {
-                arrTempStack.add(operator)
+                arrTempStack.push(operator)
             }
         }
     }
