@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if ( idxSelectionEnd != txtFormula.text.length ) {
-            val rightSideChar:Char = txtFormula.text.get(idxSelectionEnd + 1)
+            val rightSideChar:Char = txtFormula.text.get(idxSelectionEnd)
             val rightSideInput:Char = addStr.last()
 
             if ( isOperator(rightSideChar) && isOperator(rightSideInput) ) {

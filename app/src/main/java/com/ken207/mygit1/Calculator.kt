@@ -21,6 +21,7 @@ class Calculator {
         arrPostfix.forEach{
             if ( it == MULTIPLY ) {
                 operand = arrStackForCalculator.pop()
+
                 arrStackForCalculator.push(
                     arrStackForCalculator.pop().multiply(operand)
                 )
@@ -49,6 +50,10 @@ class Calculator {
         }
 
         return arrStackForCalculator.pop()
+    }
+
+    private fun twoUnit(arrStackForCalculator:Stack<String>, op:Function<BigDecimal>) {
+
     }
 
     public fun splitStringToArray(reqExpression:String): ArrayList<String> {
