@@ -79,7 +79,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setBracket() {
+        var idxSelectionStart:Int = txtFormula.getSelectionStart()
+        var idxSelectionEnd = txtFormula.getSelectionEnd()
+        var whichBracket:String = L_BRACKET // "("
 
+        if ( idxSelectionStart == 0 ) {
+            whichBracket = L_BRACKET // "("
+        }
+        else {
+            val leftSideChar:Char = txtFormula.text.get(idxSelectionStart - 1)
+
+            if ( isOperator(leftSideChar)  )
+                whichBracket = L_BRACKET // "("
+            else if ( leftSideChar == L_BRACKET[0] )
+                whichBracket = L_BRACKET // "("
+            else
+                whichBracket = R_BRACKET // ")"
+        }
+
+        addFormula(whichBracket)
     }
 
     private fun setPercent() {

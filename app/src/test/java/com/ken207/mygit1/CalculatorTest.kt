@@ -18,27 +18,11 @@ class CalculatorTest {
     }
 
     @Test
-    fun splitStringToArray() {
-        assertArrayEquals(ArrayList(listOf("1","+","2")).toArray(), calc.splitStringToArray("1+2").toArray())
-        assertArrayEquals(ArrayList(listOf("11","+","22","*","44")).toArray(), calc.splitStringToArray("11+22*44").toArray())
-        assertArrayEquals(ArrayList(listOf("(","123","+","456",")","*","789","*","100")).toArray(), calc.splitStringToArray("(123+456)*789*100").toArray())
+    fun testInfixToPostfix() {
+ //       assertEquals("234*+",calc.testInfixToPostfix("2+3*4"))
+//        assertEquals("34*5+",calc.testInfixToPostfix("3*4+5"))
+
+        assertEquals( "56+7*2/", calc.testInfixToPostfix("((5+6)*7)/2"))
     }
 
-    @Test
-    fun changeInfixToPostfix() {
-        assertArrayEquals(ArrayList(listOf("1","2","+")).toArray(), calc.changeInfixToPostfix(calc.splitStringToArray("1+2")).toArray())
-        assertArrayEquals(ArrayList(listOf("111","223","455","*","+")).toArray(), calc.changeInfixToPostfix(calc.splitStringToArray("111+223*455")).toArray())
-        assertArrayEquals(ArrayList(listOf("111","223","455","222","111","+","*","*","+")).toArray(), calc.changeInfixToPostfix(calc.splitStringToArray("111+223*455*(222+111)")).toArray())
-    }
-
-    @Test
-    fun chkAndAddTempStack() {
-        val sampleData:ArrayList<String> = ArrayList()
-        sampleData.add("+")
-        calc.chkAndAddTempStack(sampleData, "*")
-        assertArrayEquals(ArrayList(listOf("+","*")).toArray(), sampleData.toArray())
-
-        calc.chkAndAddTempStack(sampleData, "+")
-        assertArrayEquals(ArrayList(listOf("+","+","*")).toArray(), sampleData.toArray())
-    }
 }

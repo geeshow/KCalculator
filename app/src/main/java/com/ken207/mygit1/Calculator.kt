@@ -6,43 +6,39 @@ import java.math.BigDecimal
 import java.math.MathContext
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class Calculator {
 
     init {
+
     }
 
     fun calc(infixFormula:String): BigDecimal? {
-        val arrInfix:ArrayList<String> = splitStringToArray(infixFormula)
-        val arrPostfix:ArrayList<String> = changeInfixToPostfix(arrInfix)
-
+        val arrPostfix:ArrayList<String> = changeInfixToPostfix(infixFormula)
         val arrStackForCalculator:Stack<BigDecimal> = Stack()
         var operand:BigDecimal = BigDecimal.ZERO
+
         arrPostfix.forEach{
             if ( it == MULTIPLY ) {
-                operand = arrStackForCalculator.pop()
-
-                arrStackForCalculator.push(
-                    arrStackForCalculator.pop().multiply(operand)
-                )
+                calcTwoUnitInStack(arrStackForCalculator, {op1:BigDecimal, op2:BigDecimal ->
+                    op1.multiply(op2)
+                })
             }
             else if ( it == DIVIDE ) {
-                operand = arrStackForCalculator.pop()
-                arrStackForCalculator.push(
-                    arrStackForCalculator.pop().divide(operand, MathContext.UNLIMITED)
-                )
+                calcTwoUnitInStack(arrStackForCalculator, {op1:BigDecimal, op2:BigDecimal ->
+                    op1.divide(op2, MathContext.UNLIMITED)
+                })
             }
             else if ( it == PLUS ) {
-                operand = arrStackForCalculator.pop()
-                arrStackForCalculator.push(
-                    arrStackForCalculator.pop().plus(operand)
-                )
+                calcTwoUnitInStack(arrStackForCalculator, {op1:BigDecimal, op2:BigDecimal ->
+                    op1.plus(op2)
+                })
             }
             else if ( it == MINUS ) {
-                operand = arrStackForCalculator.pop()
-                arrStackForCalculator.push(
-                    arrStackForCalculator.pop().minus(operand)
-                )
+                calcTwoUnitInStack(arrStackForCalculator, {op1:BigDecimal, op2:BigDecimal ->
+                    op1.minus(op2)
+                })
             }
             else {
                 arrStackForCalculator.push(BigDecimal(it))
@@ -52,19 +48,29 @@ class Calculator {
         return arrStackForCalculator.pop()
     }
 
-    private fun twoUnit(arrStackForCalculator:Stack<String>, op:Function<BigDecimal>) {
-
+    private fun calcTwoUnitInStack(arrStackForCalculator: Stack<BigDecimal>, function: (BigDecimal, BigDecimal) -> BigDecimal) {
+        if ( arrStackForCalculator.empty() ) {
+            arrStackForCalculator.push(BigDecimal.ZERO)
+        }
+        else if ( arrStackForCalculator.size == 1) {
+            return
+        }
+        else {
+            var operand1:BigDecimal = arrStackForCalculator.pop()
+            var operand2:BigDecimal = arrStackForCalculator.pop()
+            arrStackForCalculator.push(function(operand2, operand1))
+        }
     }
 
-    public fun splitStringToArray(reqExpression:String): ArrayList<String> {
+    public fun splitStringToArray(infixFormula:String): ArrayList<String> {
         val arrInfix = ArrayList<String>()
         val sbOperand: StringBuilder = StringBuilder()
 
-        reqExpression.forEachIndexed { index, it ->
+        infixFormula.forEachIndexed { index, it ->
             when (it) {
                 in '0' .. '9' -> {
                     sbOperand.append(it)
-                    if ( reqExpression.lastIndex == index || reqExpression[index + 1] !in '0'..'9' ) {
+                    if ( infixFormula.lastIndex == index || infixFormula[index + 1] !in '0'..'9' ) {
                         arrInfix.add(sbOperand.toString())
                         sbOperand.clear()
                     }
@@ -77,34 +83,53 @@ class Calculator {
         return arrInfix
     }
 
-    public fun changeInfixToPostfix(arrInfix:ArrayList<String>):ArrayList<String> {
+    public fun testInfixToPostfix(infixFormula:String):String {
+        val arrInfix: ArrayList<String> = splitStringToArray(infixFormula)
+        val postFix:ArrayList<String> = changeInfixToPostfix(arrInfix)
+        val sbPostFix = StringBuilder()
+
+        postFix.forEach { it ->
+            sbPostFix.append(it)
+        }
+
+        return sbPostFix.toString()
+    }
+
+    private fun changeInfixToPostfix(infixFormula:String):ArrayList<String> {
+        val arrInfix: ArrayList<String> = splitStringToArray(infixFormula)
+        return changeInfixToPostfix(arrInfix)
+    }
+
+    private fun changeInfixToPostfix(arrInfix:ArrayList<String>):ArrayList<String> {
         val arrPostfix = ArrayList<String>()
         val arrTempStack = Stack<String>()
         val tempSubExpression:ArrayList<String> = ArrayList()
         var numBracketDepth:Int = 0
 
         arrInfix.forEach { it->
-            if ( numBracketDepth == 0 && it in setOf(PLUS,MINUS) ) {
-                arrTempStack.push(it)
-            }
-            else if ( numBracketDepth == 0 && it in setOf(MULTIPLY,DIVIDE) ) {
-                chkAndAddTempStack(arrTempStack, it)
-            }
-            else if ( it == L_BRACKET ) {
-                numBracketDepth++
-            }
-            else if ( it == R_BRACKET ) {
-                numBracketDepth--
-
-                if ( numBracketDepth == 0 ) {
-                    arrPostfix.addAll(changeInfixToPostfix(tempSubExpression))
-                }
-            }
-            else if ( numBracketDepth > 0 ) {
-                tempSubExpression.add(it)
+            if ( numBracketDepth == 0 ) {
+                if ( it in setOf(PLUS,MINUS,MULTIPLY,DIVIDE) )
+                    chkAndAddTempStack(it, arrTempStack, arrPostfix)
+                else if ( it == L_BRACKET )
+                    numBracketDepth++
+                else
+                    arrPostfix.add(it)
             }
             else {
-                arrPostfix.add(it)
+                if ( it == R_BRACKET ) {
+                    numBracketDepth--
+
+                    if ( numBracketDepth == 0 )
+                        arrPostfix.addAll(changeInfixToPostfix(tempSubExpression))
+                    else
+                        tempSubExpression.add(it)
+                }
+                else {
+                    tempSubExpression.add(it)
+
+                    if ( it == L_BRACKET )
+                        numBracketDepth++
+                }
             }
         }
 
@@ -115,17 +140,36 @@ class Calculator {
         return arrPostfix
     }
 
-    public fun chkAndAddTempStack(arrTempStack:Stack<String>, operator:String) {
+    public fun chkAndAddTempStack(operator:String, arrTempStack:Stack<String>, arrPostfix:ArrayList<String>) {
         if ( arrTempStack.empty() ) {
             arrTempStack.push(operator)
         } else {
             val preOp: String = arrTempStack.pop()
-            if ((preOp == MULTIPLY || preOp == DIVIDE) && (operator == PLUS || operator == MINUS)) {
+
+            if ( opPriority(preOp) == opPriority(operator) ) {
+                arrPostfix.add(preOp)
                 arrTempStack.push(operator)
+            }
+            else if ( opPriority(preOp) > opPriority(operator)) {
+                arrPostfix.add(preOp)
+                arrTempStack.push(operator)
+            }
+            else  {
                 arrTempStack.push(preOp)
-            } else {
                 arrTempStack.push(operator)
             }
         }
     }
 }
+
+fun opPriority(op:String):Int {
+    if ( op in setOf("*","/") )
+        return 3
+
+    else if ( op in setOf("+","-") )
+        return 2
+
+    else
+        return 0
+}
+
