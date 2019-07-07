@@ -5,8 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.StringBuilder
-import kotlin.collections.ArrayList
+
 
 class MainActivity : AppCompatActivity() {
     private var myCalc:Calculator = Calculator()
@@ -15,9 +14,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        listOf(btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btnMulti, btnMinus, btnPlus, btnNegative, btnDecimal, btnEqual).forEach {
+        listOf(btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btnMulti, btnMinus, btnPlus, btnNegative, btnDecimal, btnEqual,btnClean,btnBracket,btnPercent,btnDivide).forEach {
             it.setOnClickListener { clickButton(it) }
         }
+
+        doClean()
     }
 
     private fun clickButton(btnNum: View) {
@@ -47,16 +48,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun putZero() {
-        if ( txtFormula.text.toString() != "0" )
+        if ( getFormulaString() != "0" )
             putNumber("0")
     }
 
     private fun putNumber(number:String) {
-        addStringToExpression(number)
+        if ( getFormulaString() == "0" )
+            setFormula(number)
+        else
+            addFormula(number)
     }
 
     private fun putOperator(operator:String) {
-        addStringToExpression(operator)
+        addFormula(operator)
     }
 
     private fun setNegative() {
@@ -65,12 +69,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun doCalculate() {
         txtRslt.setText(
-            myCalc.calc(txtFormula.text.toString()).toString()
+            myCalc.calc(getFormulaString()).toString()
         )
     }
 
     private fun doClean() {
-        txtFormula.setText("0")
+        Toast.makeText(this@MainActivity, txtFormula.getSelectionStart().toString() + ":" + txtFormula.getSelectionEnd().toString(), Toast.LENGTH_LONG).show()
+        setFormula("0")
     }
 
     private fun setBracket() {
@@ -81,9 +86,58 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun addStringToExpression(char:String) {
+    private fun getFormulaString():String {
+        return txtFormula.text.toString()
+    }
+
+    private fun addFormula(addStr:String) {
+        var idxSelectionStart:Int = txtFormula.getSelectionStart()
+        var idxSelectionEnd = txtFormula.getSelectionEnd()
+
+        if ( idxSelectionStart == 0 ) {
+            if ( !checkAllowCharAtFirst(addStr.first()) )
+                return
+        }
+        else {
+            val leftSideChar:Char = txtFormula.text.get(idxSelectionStart - 1)
+            val leftSideInput:Char = addStr.first()
+
+            if ( isOperator(leftSideChar) && isOperator(leftSideInput) ) {
+                idxSelectionStart--
+            }
+        }
+
+        if ( idxSelectionEnd != txtFormula.text.length ) {
+            val rightSideChar:Char = txtFormula.text.get(idxSelectionEnd)
+            val rightSideInput:Char = addStr.last()
+
+            if ( isOperator(rightSideChar) && isOperator(rightSideInput) ) {
+                idxSelectionEnd++
+            }
+        }
+
+        txtFormula.getText().replace(idxSelectionStart, idxSelectionEnd, addStr)
+        txtFormula.setSelection(idxSelectionStart+addStr.length,idxSelectionStart+addStr.length)
+    }
+
+    private fun setFormula(char:String) {
         // TODO SpannableString
-        txtFormula.setText(txtFormula.text.toString() + char)
+        txtFormula.setText(char)
+        txtFormula.setSelection(txtFormula.text.length,txtFormula.text.length)
+    }
+
+    private fun checkAllowCharAtFirst(char:Char):Boolean {
+        if ( char.toString() in setOf(MULTIPLY, DIVIDE, PLUS, MINUS, R_BRACKET, "0"))
+            return false
+
+        return true
+    }
+
+    private fun isOperator(char:Char):Boolean {
+        if ( char.toString() in setOf(MULTIPLY, DIVIDE, PLUS, MINUS))
+            return true
+
+        return false
     }
 }
 
