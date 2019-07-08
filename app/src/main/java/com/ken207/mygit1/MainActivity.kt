@@ -101,7 +101,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setPercent() {
+        var idxSelectionStart:Int = txtFormula.getSelectionStart()
+        var idxSelectionEnd = txtFormula.getSelectionEnd()
+        var whichBracket:String = L_BRACKET // "("
 
+        if ( idxSelectionStart == 0 ) {
+            return
+        }
+        else {
+            val leftSideChar:Char = txtFormula.text.get(idxSelectionStart - 1)
+
+            if ( isOperator(leftSideChar)  )
+                return
+            else if ( leftSideChar == L_BRACKET[0] ) // "("
+                return
+            else
+                addFormula("%")
+        }
     }
 
     private fun getFormulaString():String {

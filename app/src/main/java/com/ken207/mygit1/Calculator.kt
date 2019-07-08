@@ -68,9 +68,9 @@ class Calculator {
 
         infixFormula.forEachIndexed { index, it ->
             when (it) {
-                in '0' .. '9' -> {
+                in '0' .. '9','%' -> {
                     sbOperand.append(it)
-                    if ( infixFormula.lastIndex == index || infixFormula[index + 1] !in '0'..'9' ) {
+                    if ( infixFormula.lastIndex == index || ( infixFormula[index + 1] !in '0'..'9' && infixFormula[index + 1] != '%' ) ) {
                         arrInfix.add(sbOperand.toString())
                         sbOperand.clear()
                     }
