@@ -1,12 +1,10 @@
 package com.ken207.mygit1
 
-import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.StringBuilder
 import java.math.BigDecimal
 import java.math.MathContext
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class Calculator {
 
@@ -14,52 +12,31 @@ class Calculator {
 
     }
 
-    fun calc(infixFormula:String): BigDecimal? {
+    fun calc(infixFormula:String): Operand? {
         val arrPostfix:ArrayList<String> = changeInfixToPostfix(infixFormula)
-        val arrStackForCalculator:Stack<BigDecimal> = Stack()
+        val arrStackForCalculator:Stack<Operand> = Stack()
         var operand:BigDecimal = BigDecimal.ZERO
 
         arrPostfix.forEach{
-            if ( it == MULTIPLY ) {
-                calcTwoUnitInStack(arrStackForCalculator, {op1:BigDecimal, op2:BigDecimal ->
-                    op1.multiply(op2)
-                })
+            if ( it in setOf(MULTIPLY,DIVIDE,PLUS,MINUS) ) {
+                if ( arrStackForCalculator.empty() ) {
+                    arrStackForCalculator.push(Operand("0"))
+                }
+                else if ( arrStackForCalculator.size > 1) {
+                    var operand1:Operand = arrStackForCalculator.pop()
+                    var operand2:Operand = arrStackForCalculator.pop()
+                    arrStackForCalculator.push(operand2.setOperator(it).calc(operand1))
+                }
             }
-            else if ( it == DIVIDE ) {
-                calcTwoUnitInStack(arrStackForCalculator, {op1:BigDecimal, op2:BigDecimal ->
-                    op1.divide(op2, MathContext.UNLIMITED)
-                })
-            }
-            else if ( it == PLUS ) {
-                calcTwoUnitInStack(arrStackForCalculator, {op1:BigDecimal, op2:BigDecimal ->
-                    op1.plus(op2)
-                })
-            }
-            else if ( it == MINUS ) {
-                calcTwoUnitInStack(arrStackForCalculator, {op1:BigDecimal, op2:BigDecimal ->
-                    op1.minus(op2)
-                })
+            else if ( it == PERCENT ) {
+                arrStackForCalculator.push(arrStackForCalculator.pop().setPercent(true))
             }
             else {
-                arrStackForCalculator.push(BigDecimal(it))
+                arrStackForCalculator.push(Operand(it))
             }
         }
 
         return arrStackForCalculator.pop()
-    }
-
-    private fun calcTwoUnitInStack(arrStackForCalculator: Stack<BigDecimal>, function: (BigDecimal, BigDecimal) -> BigDecimal) {
-        if ( arrStackForCalculator.empty() ) {
-            arrStackForCalculator.push(BigDecimal.ZERO)
-        }
-        else if ( arrStackForCalculator.size == 1) {
-            return
-        }
-        else {
-            var operand1:BigDecimal = arrStackForCalculator.pop()
-            var operand2:BigDecimal = arrStackForCalculator.pop()
-            arrStackForCalculator.push(function(operand2, operand1))
-        }
     }
 
     public fun splitStringToArray(infixFormula:String): ArrayList<String> {
@@ -68,9 +45,9 @@ class Calculator {
 
         infixFormula.forEachIndexed { index, it ->
             when (it) {
-                in '0' .. '9','%' -> {
+                in '0' .. '9' -> {
                     sbOperand.append(it)
-                    if ( infixFormula.lastIndex == index || ( infixFormula[index + 1] !in '0'..'9' && infixFormula[index + 1] != '%' ) ) {
+                    if ( infixFormula.lastIndex == index || infixFormula[index + 1] !in '0'..'9' ) {
                         arrInfix.add(sbOperand.toString())
                         sbOperand.clear()
                     }
