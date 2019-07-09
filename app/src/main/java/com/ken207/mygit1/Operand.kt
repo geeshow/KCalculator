@@ -26,33 +26,67 @@ class Operand {
         return this
     }
 
-    fun calc(op2:Operand):Operand {
+    fun calc(oper2:Operand):Operand {
         when (operator) {
-            MULTIPLY[0] -> multiply(op2)
-            DIVIDE[0] -> divide(op2)
-            PLUS[0] -> plus(op2)
-            MINUS[0] -> minus(op2)
+            MULTIPLY[0] -> multiply(oper2)
+            DIVIDE[0] -> divide(oper2)
+            PLUS[0] -> plus(oper2)
+            MINUS[0] -> minus(oper2)
         }
+
+        this.is_percent = false
+        oper2.is_percent = false
+
         return this
     }
 
-    fun multiply(op2:Operand) {
-        value = value.multiply(op2.value)
+    fun multiply(oper2:Operand) {
+        if ( this.is_percent  )
+            this.value = this.value.divide(BigDecimal(100), MathContext.DECIMAL32)
+        if ( oper2.is_percent )
+            oper2.value = oper2.value.divide(BigDecimal(100), MathContext.DECIMAL32)
+
+        value = value.multiply(oper2.value)
     }
-    fun divide(op2:Operand) {
-        value = value.divide(op2.value, MathContext.UNLIMITED)
+    fun divide(oper2:Operand) {
+        if ( this.is_percent  )
+            this.value = this.value.divide(BigDecimal(100), MathContext.DECIMAL32)
+        if ( oper2.is_percent )
+            oper2.value = oper2.value.divide(BigDecimal(100), MathContext.DECIMAL32)
+
+        value = value.divide(oper2.value, MathContext.DECIMAL128)
     }
-    fun plus(op2:Operand) {
-        value = value.plus(op2.value)
+    fun plus(oper2:Operand) {
+        if ( this.is_percent && oper2.is_percent ) {
+            this.value = this.value.divide(BigDecimal(100), MathContext.DECIMAL32)
+            oper2.value = oper2.value.divide(BigDecimal(100), MathContext.DECIMAL32)
+        }
+        else if ( this.is_percent ) {
+            this.value = this.value.divide(BigDecimal(100), MathContext.DECIMAL32).multiply(oper2.value)
+        }
+        else if ( oper2.is_percent ) {
+            oper2.value = oper2.value.divide(BigDecimal(100), MathContext.DECIMAL32).multiply(this.value)
+        }
+
+        value = value.plus(oper2.value)
     }
-    fun minus(op2:Operand) {
-        value = value.minus(op2.value)
+    fun minus(oper2:Operand) {
+        if ( this.is_percent && oper2.is_percent ) {
+            this.value = this.value.divide(BigDecimal(100), MathContext.DECIMAL32)
+            oper2.value = oper2.value.divide(BigDecimal(100), MathContext.DECIMAL32)
+        }
+        else if ( this.is_percent ) {
+            this.value = this.value.divide(BigDecimal(100), MathContext.DECIMAL32).multiply(oper2.value)
+        }
+        else if ( oper2.is_percent ) {
+            oper2.value = oper2.value.divide(BigDecimal(100), MathContext.DECIMAL32).multiply(this.value)
+        }
+
+        value = value.minus(oper2.value)
     }
 
     override fun toString():String {
-        if ( value.toString().length > 10 ) {
-            value.
-        }
-        return value.toString()
+        return value.setScale(18,BigDecimal.ROUND_HALF_UP).toString().trimEnd('0').trimEnd('.')
     }
+
 }
