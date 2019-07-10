@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun clickButton(btnNum: View) {
         when (btnNum.id) {
-            R.id.btn0 -> putZero()
+            R.id.btn0 -> putNumber("0")
             R.id.btn1 -> putNumber("1")
             R.id.btn2 -> putNumber("2")
             R.id.btn3 -> putNumber("3")
@@ -46,11 +46,6 @@ class MainActivity : AppCompatActivity() {
             R.id.btnDivide -> putOperator(DIVIDE)
             else -> Toast.makeText(this@MainActivity, R.string.notImplemented, Toast.LENGTH_LONG).show()
         }
-    }
-
-    private fun putZero() {
-        if ( getFormulaString() != "0" )
-            putNumber("0")
     }
 
     private fun putNumber(number:String) {
