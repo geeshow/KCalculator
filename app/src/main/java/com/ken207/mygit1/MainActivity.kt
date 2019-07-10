@@ -48,11 +48,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //
     private fun putNumber(number:String) {
         if ( getFormulaString() == "0" )
             setFormula(number)
         else
             addFormula(number)
+
     }
 
     private fun putOperator(operator:String) {
