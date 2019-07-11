@@ -18,7 +18,7 @@ class Calculator {
         var operand:BigDecimal = BigDecimal.ZERO
 
         arrPostfix.forEach{
-            if ( it in setOf(MULTIPLY,DIVIDE,PLUS,MINUS) ) {
+            if ( it[0] in setOf(MULTIPLY,DIVIDE,PLUS,MINUS) ) {
                 if ( arrStackForCalculator.empty() ) {
                     arrStackForCalculator.push(Operand("0"))
                 }
@@ -28,7 +28,7 @@ class Calculator {
                     arrStackForCalculator.push(operand2.setOperator(it).calc(operand1))
                 }
             }
-            else if ( it == PERCENT ) {
+            else if ( it[0] == PERCENT ) {
                 arrStackForCalculator.push(arrStackForCalculator.pop().setPercent(true))
             }
             else {
@@ -85,15 +85,15 @@ class Calculator {
 
         arrInfix.forEach { it->
             if ( numBracketDepth == 0 ) {
-                if ( it in setOf(PLUS,MINUS,MULTIPLY,DIVIDE) )
+                if ( it[0] in setOf(PLUS,MINUS,MULTIPLY,DIVIDE) )
                     chkAndAddTempStack(it, arrTempStack, arrPostfix)
-                else if ( it == L_BRACKET )
+                else if ( it[0] == L_BRACKET )
                     numBracketDepth++
                 else
                     arrPostfix.add(it)
             }
             else {
-                if ( it == R_BRACKET ) {
+                if ( it[0] == R_BRACKET ) {
                     numBracketDepth--
 
                     if ( numBracketDepth == 0 )
@@ -104,7 +104,7 @@ class Calculator {
                 else {
                     tempSubExpression.add(it)
 
-                    if ( it == L_BRACKET )
+                    if ( it[0] == L_BRACKET )
                         numBracketDepth++
                 }
             }

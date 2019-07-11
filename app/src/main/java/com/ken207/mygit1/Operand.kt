@@ -28,10 +28,10 @@ class Operand {
 
     fun calc(oper2:Operand):Operand {
         when (operator) {
-            MULTIPLY[0] -> multiply(oper2)
-            DIVIDE[0] -> divide(oper2)
-            PLUS[0] -> plus(oper2)
-            MINUS[0] -> minus(oper2)
+            MULTIPLY -> multiply(oper2)
+            DIVIDE-> divide(oper2)
+            PLUS-> plus(oper2)
+            MINUS -> minus(oper2)
         }
 
         this.is_percent = false

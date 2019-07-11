@@ -8,18 +8,15 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
-    private var myCalc:Calculator = Calculator()
+    private var formulaMng:FormulaManager = FormulaManager(txtFormula)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        txtFormula.inputType = 0
         listOf(btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btnMulti, btnMinus, btnPlus, btnNegative, btnDecimal, btnEqual,btnClean,btnBracket,btnPercent,btnDivide).forEach {
             it.setOnClickListener { clickButton(it) }
         }
-
-        doClean()
     }
 
     private fun clickButton(btnNum: View) {
@@ -50,138 +47,33 @@ class MainActivity : AppCompatActivity() {
 
     //
     private fun putNumber(inputChar:Char) {
-        var idxSelectionStart:Int = txtFormula.getSelectionStart()
-        var idxSelectionEnd = txtFormula.getSelectionEnd()
-
-        if ( idxSelectionStart == 0 ) {
-            if ( inputChar == '0' )
-                return
-        }
-        else {
-            val leftSideChar:Char = txtFormula.text.get(idxSelectionStart - 1)
-            val leftSideInput:Char = inputChar
-
-            if ( leftSideChar == '%' )
-                addFormula(MULTIPLY)
-        }
-
-        addFormula(inputChar)
+        formulaMng.putNumber(inputChar)
     }
 
     private fun putOperator(operator:Char) {
-        var idxSelectionStart:Int = txtFormula.getSelectionStart()
-        var idxSelectionEnd = txtFormula.getSelectionEnd()
-
-        if ( idxSelectionStart == 0 ) {
-            return // Deny putting operator as a first
-        }
-        else {
-            val leftSideChar:Char = txtFormula.text.get(idxSelectionStart - 1)
-
-            if ( isOperator(leftSideChar) ) {
-                idxSelectionStart--
-            }
-        }
-
-        if ( idxSelectionEnd != txtFormula.text.length ) {
-            val rightSideChar:Char = txtFormula.text.get(idxSelectionEnd)
-
-            if ( isOperator(rightSideChar) ) {
-                idxSelectionEnd++
-            }
-        }
-
-        addFormula(operator, idxSelectionStart, idxSelectionEnd)
+        formulaMng.putOperator(operator)
     }
 
     private fun setNegative() {
-
+        formulaMng.setNegative()
     }
 
     private fun doCalculate() {
         txtRslt.setText(
-            myCalc.calc(getFormulaString()).toString()
+            formulaMng.calc()
         )
     }
 
     private fun doClean() {
-        Toast.makeText(this@MainActivity, txtFormula.getSelectionStart().toString() + ":" + txtFormula.getSelectionEnd().toString(), Toast.LENGTH_LONG).show()
-        setFormula("0")
+        formulaMng.setFormula("0")
     }
 
     private fun setBracket() {
-        var idxSelectionStart:Int = txtFormula.getSelectionStart()
-        var idxSelectionEnd = txtFormula.getSelectionEnd()
-        var whichBracket:Char = L_BRACKET // "("
-
-        if ( idxSelectionStart == 0 ) {
-            whichBracket = L_BRACKET // "("
-        }
-        else {
-            val leftSideChar:Char = txtFormula.text.get(idxSelectionStart - 1)
-
-            if ( isOperator(leftSideChar)  )
-                whichBracket = L_BRACKET // "("
-            else if ( leftSideChar == L_BRACKET )
-                whichBracket = L_BRACKET // "("
-            else
-                whichBracket = R_BRACKET // ")"
-        }
-
-        addFormula(whichBracket)
+        formulaMng.setBracket()
     }
 
     private fun setPercent() {
-        var idxSelectionStart:Int = txtFormula.getSelectionStart()
-        var idxSelectionEnd = txtFormula.getSelectionEnd()
-        var whichBracket:Char = L_BRACKET // "("
-
-        if ( idxSelectionStart == 0 ) {
-            return
-        }
-        else {
-            val leftSideChar:Char = txtFormula.text.get(idxSelectionStart - 1)
-
-            if ( isOperator(leftSideChar)  )
-                return
-            else if ( leftSideChar == L_BRACKET ) // '('
-                return
-            else
-                addFormula('%')
-        }
-    }
-
-    private fun getFormulaString():String {
-        return txtFormula.text.toString()
-    }
-    private fun addFormula(inputChar:Char, idxSelectionStart:Int=txtFormula.getSelectionStart(), idxSelectionEnd:Int=txtFormula.getSelectionEnd()) {
-        var moveToSelectionStart:Int = txtFormula.getSelectionStart()
-        var moveToSelectionEnd = txtFormula.getSelectionEnd()
-
-        txtFormula.getText().replace(moveToSelectionStart, moveToSelectionEnd, inputChar.toString())
-        txtFormula.setSelection(moveToSelectionStart+1,moveToSelectionStart+1)
-    }
-
-
-
-    private fun setFormula(char:String) {
-        // TODO SpannableString
-        txtFormula.setText(char)
-        txtFormula.setSelection(txtFormula.text.length,txtFormula.text.length)
-    }
-
-    private fun checkAllowCharAtFirst(char:Char):Boolean {
-        if ( char in setOf(MULTIPLY, DIVIDE, PLUS, MINUS, R_BRACKET, PERCENT))
-            return false
-
-        return true
-    }
-
-    private fun isOperator(char:Char):Boolean {
-        if ( char in setOf(MULTIPLY, DIVIDE, PLUS, MINUS))
-            return true
-
-        return false
+        formulaMng.setPercent()
     }
 }
 
