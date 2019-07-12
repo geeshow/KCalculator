@@ -30,6 +30,7 @@ class CalculatorTest {
         assertEquals( "300", calc.calc("3*10*(2/20%)").toString())
         assertEquals( "0.1", calc.calc("20%/2").toString())
         assertEquals( "10", calc.calc("2/20%").toString())
+        assertEquals( "10", calc.calc("2+(-1)").toString())
     }
 
 }
