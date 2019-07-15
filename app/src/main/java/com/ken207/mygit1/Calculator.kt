@@ -18,7 +18,7 @@ class Calculator {
         var operand:BigDecimal = BigDecimal.ZERO
 
         arrPostfix.forEach{
-            if ( it[0] in setOf(MULTIPLY,DIVIDE,PLUS,MINUS) ) {
+            if ( it in setOf(S_MULTIPLY,S_DIVIDE,S_PLUS,S_MINUS) ) {
                 if ( arrStackForCalculator.empty() ) {
                     arrStackForCalculator.push(Operand("0"))
                 }
@@ -28,7 +28,7 @@ class Calculator {
                     arrStackForCalculator.push(operand2.setOperator(it).calc(operand1))
                 }
             }
-            else if ( it[0] == PERCENT ) {
+            else if ( it == S_PERCENT ) {
                 arrStackForCalculator.push(arrStackForCalculator.pop().setPercent(true))
             }
             else {
@@ -42,6 +42,7 @@ class Calculator {
     public fun splitStringToArray(infixFormula:String): ArrayList<String> {
         val arrInfix = ArrayList<String>()
         val sbOperand: StringBuilder = StringBuilder()
+        var previousOne:Char = ' '
 
         infixFormula.forEachIndexed { index, it ->
             when (it) {
@@ -52,10 +53,24 @@ class Calculator {
                         sbOperand.clear()
                     }
                 }
+                '-' -> {
+                    var isMinusOperator:Boolean = false
+                    when ( previousOne ) {
+                        PERCENT, R_BRACKET, DIGIT -> isMinusOperator = true
+                        in '0' .. '9' -> isMinusOperator = true
+                        else -> isMinusOperator = false
+                    }
+
+                    if ( isMinusOperator )
+                        arrInfix.add(it.toString())
+                    else
+                        arrInfix.add(S_NAGATIVE)
+                }
                 else -> {
                     arrInfix.add(it.toString())
                 }
             }
+            previousOne = it
         }
         return arrInfix
     }
@@ -85,15 +100,19 @@ class Calculator {
 
         arrInfix.forEach { it->
             if ( numBracketDepth == 0 ) {
-                if ( it[0] in setOf(PLUS,MINUS,MULTIPLY,DIVIDE) )
+                if ( it in setOf(S_PLUS,S_MINUS,S_MULTIPLY,S_DIVIDE) )
                     chkAndAddTempStack(it, arrTempStack, arrPostfix)
-                else if ( it[0] == L_BRACKET )
+                else if ( it == S_L_BRACKET )
                     numBracketDepth++
+                else if ( it == S_NAGATIVE ) {
+                    arrPostfix.add("-1")
+                    chkAndAddTempStack(S_MULTIPLY, arrTempStack, arrPostfix)
+                }
                 else
                     arrPostfix.add(it)
             }
             else {
-                if ( it[0] == R_BRACKET ) {
+                if ( it == S_R_BRACKET ) {
                     numBracketDepth--
 
                     if ( numBracketDepth == 0 )
@@ -104,7 +123,7 @@ class Calculator {
                 else {
                     tempSubExpression.add(it)
 
-                    if ( it[0] == L_BRACKET )
+                    if ( it == S_L_BRACKET )
                         numBracketDepth++
                 }
             }
