@@ -39,44 +39,8 @@ class Calculator {
         return arrStackForCalculator.pop()
     }
 
-    public fun splitStringToArray(infixFormula:String): ArrayList<String> {
-        val arrInfix = ArrayList<String>()
-        val sbOperand: StringBuilder = StringBuilder()
-        var previousOne:Char = ' '
-
-        infixFormula.forEachIndexed { index, it ->
-            when (it) {
-                in '0' .. '9' -> {
-                    sbOperand.append(it)
-                    if ( infixFormula.lastIndex == index || infixFormula[index + 1] !in '0'..'9' ) {
-                        arrInfix.add(sbOperand.toString())
-                        sbOperand.clear()
-                    }
-                }
-                '-' -> {
-                    var isMinusOperator:Boolean = false
-                    when ( previousOne ) {
-                        PERCENT, R_BRACKET, DIGIT -> isMinusOperator = true
-                        in '0' .. '9' -> isMinusOperator = true
-                        else -> isMinusOperator = false
-                    }
-
-                    if ( isMinusOperator )
-                        arrInfix.add(it.toString())
-                    else
-                        arrInfix.add(S_NAGATIVE)
-                }
-                else -> {
-                    arrInfix.add(it.toString())
-                }
-            }
-            previousOne = it
-        }
-        return arrInfix
-    }
-
     public fun testInfixToPostfix(infixFormula:String):String {
-        val arrInfix: ArrayList<String> = splitStringToArray(infixFormula)
+        val arrInfix: ArrayList<String> = StringUtil.splitStringToArray(infixFormula)
         val postFix:ArrayList<String> = changeInfixToPostfix(arrInfix)
         val sbPostFix = StringBuilder()
 
@@ -88,7 +52,7 @@ class Calculator {
     }
 
     private fun changeInfixToPostfix(infixFormula:String):ArrayList<String> {
-        val arrInfix: ArrayList<String> = splitStringToArray(infixFormula)
+        val arrInfix: ArrayList<String> = StringUtil.splitStringToArray(infixFormula)
         return changeInfixToPostfix(arrInfix)
     }
 

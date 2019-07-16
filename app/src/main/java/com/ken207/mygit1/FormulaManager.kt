@@ -40,12 +40,12 @@ class FormulaManager {
 
     fun addFormula(inputStr:String, cursorStartIdx:Int=txtFormula.getSelectionStart(), cursorEndIdx:Int=txtFormula.getSelectionEnd()) {
         txtFormula.getText().replace(cursorStartIdx, cursorEndIdx, inputStr)
-        txtFormula.setSelection(cursorStartIdx+inputStr.length,cursorEndIdx+inputStr.length)
+        txtFormula.setSelection(cursorEndIdx+inputStr.length,cursorEndIdx+inputStr.length)
     }
 
     fun addFormula(inputChar:Char, cursorStartIdx:Int=txtFormula.getSelectionStart(), cursorEndIdx:Int=txtFormula.getSelectionEnd()) {
         txtFormula.getText().replace(cursorStartIdx, cursorEndIdx, inputChar.toString())
-        txtFormula.setSelection(cursorStartIdx+1,cursorEndIdx+1)
+        txtFormula.setSelection(cursorEndIdx+1,cursorEndIdx+1)
     }
 
     fun setFormula(char:String) {
@@ -128,20 +128,11 @@ class FormulaManager {
     }
 
     fun setNegative() {
-        val cursorPosition:Array<Int> = getCursorPosition()
-
-        if ( isCursorAtTheHead() ) {
-            return // Deny putting operator as a first
-        }
-        else {
-
-        }
-
-        if ( !isCursorAtTheClose() ) {
-            if ( isOperator(getRightSideCharFromCursor()) ) {
-                cursorPosition[END_CURSOR_POSITION]++
-            }
-        }
+        var unitPosition:Array<Int> = StringUtil.getSelectedUnitPosition(txtFormula.getText().toString(), getCursorPosition()[0])
+        var operand:String = StringUtil.toggleNegative(
+                        txtFormula.getText().toString().substring(unitPosition[0], unitPosition[1])
+            )
+        addFormula(operand, getCursorPosition()[0])
     }
 
     fun calc():String {

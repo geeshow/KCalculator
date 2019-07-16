@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
-    private var formulaMng:FormulaManager = FormulaManager(txtFormula)
+    lateinit private var formulaMng:FormulaManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,6 +17,8 @@ class MainActivity : AppCompatActivity() {
         listOf(btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btnMulti, btnMinus, btnPlus, btnNegative, btnDecimal, btnEqual,btnClean,btnBracket,btnPercent,btnDivide).forEach {
             it.setOnClickListener { clickButton(it) }
         }
+
+        formulaMng = FormulaManager(txtFormula)
     }
 
     private fun clickButton(btnNum: View) {
