@@ -10,7 +10,6 @@ class FormulaManager {
 
     constructor(txtFormula: EditText) {
         this.txtFormula = txtFormula
-        this.txtFormula.inputType = 0
         setFormula("0")
     }
 
@@ -54,6 +53,10 @@ class FormulaManager {
         txtFormula.setSelection(txtFormula.text.length,txtFormula.text.length)
     }
 
+    fun setFormula(char:Char) {
+        setFormula(char.toString())
+    }
+
     fun putNumber(inputChar:Char) {
         if ( isCursorAtTheHead() ) {
             if ( inputChar == '0' )
@@ -65,7 +68,10 @@ class FormulaManager {
                 addFormula(MULTIPLY)
         }
 
-        addFormula(inputChar)
+        if ( getFormula() == "0" )
+            setFormula(inputChar)
+        else
+            addFormula(inputChar)
     }
 
     fun putOperator(operator:Char) {
@@ -146,6 +152,9 @@ class FormulaManager {
         return false
     }
 
+    fun getFormula():String {
+        return txtFormula.text.toString()
+    }
     override fun toString():String {
         return txtFormula.text.toString()
     }
