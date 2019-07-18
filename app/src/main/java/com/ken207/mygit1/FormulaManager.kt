@@ -39,12 +39,12 @@ class FormulaManager {
 
     fun addFormula(inputStr:String, cursorStartIdx:Int=txtFormula.getSelectionStart(), cursorEndIdx:Int=txtFormula.getSelectionEnd()) {
         txtFormula.getText().replace(cursorStartIdx, cursorEndIdx, inputStr)
-        txtFormula.setSelection(cursorEndIdx+inputStr.length,cursorEndIdx+inputStr.length)
+        txtFormula.setSelection(cursorStartIdx+inputStr.length,cursorStartIdx+inputStr.length)
     }
 
     fun addFormula(inputChar:Char, cursorStartIdx:Int=txtFormula.getSelectionStart(), cursorEndIdx:Int=txtFormula.getSelectionEnd()) {
         txtFormula.getText().replace(cursorStartIdx, cursorEndIdx, inputChar.toString())
-        txtFormula.setSelection(cursorEndIdx+1,cursorEndIdx+1)
+        txtFormula.setSelection(cursorStartIdx+1,cursorStartIdx+1)
     }
 
     fun setFormula(char:String) {
@@ -64,7 +64,8 @@ class FormulaManager {
         }
         else {
             // when the left side charactor is a percent(%) symbol if put a number, add multiply(*) operator symbol
-            if ( getLeftSideCharFromCursor() == PERCENT )
+            val leftSideChar:Char = getLeftSideCharFromCursor()
+            if ( leftSideChar == PERCENT || leftSideChar == R_BRACKET )
                 addFormula(MULTIPLY)
         }
 
@@ -138,7 +139,7 @@ class FormulaManager {
         var operand:String = StringUtil.toggleNegative(
                         txtFormula.getText().toString().substring(unitPosition[0], unitPosition[1])
             )
-        addFormula(operand, getCursorPosition()[0])
+        addFormula(operand, unitPosition[0], unitPosition[1])
     }
 
     fun calc():String {
