@@ -153,6 +153,15 @@ class FormulaManager {
         return false
     }
 
+    fun doDelete() {
+        var idxSelectionStart:Int = txtFormula.getSelectionStart()
+        var idxSelectionEnd = txtFormula.getSelectionEnd()
+
+        if ( idxSelectionStart > 0 ) {
+            txtFormula.getText().replace(idxSelectionStart - 1, idxSelectionEnd, "")
+        }
+    }
+
     fun getFormula():String {
         return txtFormula.text.toString()
     }

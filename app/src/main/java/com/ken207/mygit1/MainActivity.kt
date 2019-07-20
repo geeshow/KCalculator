@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        listOf(btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btnMulti, btnMinus, btnPlus, btnNegative, btnDecimal, btnEqual,btnClean,btnBracket,btnPercent,btnDivide).forEach {
+        listOf(btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btnMulti, btnMinus, btnPlus, btnNegative, btnDecimal, btnEqual,btnClean,btnBracket,btnPercent,btnDivide, btnDelete).forEach {
             it.setOnClickListener { clickButton(it) }
         }
 
@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
             R.id.btnBracket -> setBracket()
             R.id.btnPercent -> setPercent()
             R.id.btnDivide -> putOperator(DIVIDE)
+            R.id.btnDelete -> doDelete()
             else -> Toast.makeText(this@MainActivity, R.string.notImplemented, Toast.LENGTH_LONG).show()
         }
     }
@@ -77,6 +78,11 @@ class MainActivity : AppCompatActivity() {
     private fun setPercent() {
         formulaMng.setPercent()
     }
+
+    private fun doDelete() {
+        formulaMng.doDelete()
+    }
+
 }
 
 

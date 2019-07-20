@@ -33,12 +33,20 @@
             app:fontFamily="@font/aclonica"/>
 
     <Button
-            android:id="@+id/btnClean" android:text="@string/btnClean"
+            android:id="@+id/btnDelete" android:text="@string/btnDelete"
             android:layout_width="0dp" android:layout_height="wrap_content"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintHorizontal_weight="1" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btnBracket"
             app:layout_constraintTop_toBottomOf="@id/txtRslt" style="@android:style/Widget.Holo.Button"/>
+
+    <Button
+            android:id="@+id/btnClean" android:text="@string/btnClean"
+            android:layout_width="0dp" android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintHorizontal_weight="1" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btnBracket"
+            app:layout_constraintTop_toBottomOf="@id/btnDelete" style="@android:style/Widget.Holo.Button"/>
     <Button
             android:id="@+id/btnBracket" android:text="@string/btnBracket"
             android:layout_width="0dp" android:layout_height="wrap_content"

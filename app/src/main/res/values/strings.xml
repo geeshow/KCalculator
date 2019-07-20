@@ -18,6 +18,7 @@
     <string name="btnMulti" translatable="false">×</string>
     <string name="btnNegative" translatable="false">±</string>
     <string name="btnClean" translatable="false">C</string>
+    <string name="btnDelete" translatable="false">←</string>
     <string name="btnEqual" translatable="false">=</string>
     <string name="btnBracket" translatable="false">()</string>
     <string name="btnPercent" translatable="false">%</string>
