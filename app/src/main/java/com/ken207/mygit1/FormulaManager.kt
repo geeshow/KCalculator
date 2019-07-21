@@ -1,6 +1,8 @@
 package com.ken207.mygit1
 
+import android.text.Editable
 import android.widget.EditText
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
 class FormulaManager {
@@ -18,19 +20,19 @@ class FormulaManager {
     }
 
     private fun isCursorAtTheClose():Boolean {
-        return txtFormula.getSelectionEnd() == txtFormula.text.length
+        return txtFormula.getSelectionEnd() == getFormula().length
     }
 
     private fun getLeftSideCharFromCursor():Char {
         if ( isCursorAtTheHead() )
             return ' '
-        return txtFormula.text.get(txtFormula.getSelectionStart() - 1)
+        return getFormula().get(txtFormula.getSelectionStart() - 1)
     }
 
     private fun getRightSideCharFromCursor():Char {
         if ( isCursorAtTheClose() )
             return ' '
-        return txtFormula.text.get(txtFormula.getSelectionStart() - 1)
+        return getFormula().get(txtFormula.getSelectionStart() - 1)
     }
 
     private fun getCursorPosition():Array<Int> {
@@ -43,36 +45,41 @@ class FormulaManager {
     }
 
     fun addFormula(inputChar:Char, cursorStartIdx:Int=txtFormula.getSelectionStart(), cursorEndIdx:Int=txtFormula.getSelectionEnd()) {
-        txtFormula.getText().replace(cursorStartIdx, cursorEndIdx, inputChar.toString())
-        txtFormula.setSelection(cursorStartIdx+1,cursorStartIdx+1)
+        addFormula(inputChar.toString(), cursorStartIdx, cursorEndIdx);
     }
 
     fun setFormula(char:String) {
         // TODO SpannableString
         txtFormula.setText(char)
-        txtFormula.setSelection(txtFormula.text.length,txtFormula.text.length)
+        txtFormula.setSelection(getFormula().length,getFormula().length)
     }
 
     fun setFormula(char:Char) {
         setFormula(char.toString())
     }
 
-    fun putNumber(inputChar:Char) {
-        if ( isCursorAtTheHead() ) {
-            if ( inputChar == '0' )
-                return
+    fun putNumber(inputChar:Char):Int {
+        var resultCode:Int = 0
+
+        if ( isCursorAtTheHead() && inputChar == '0' ) {
+            resultCode = 1
+        }
+        else if ( getStringFormula() == "0" ) {
+            setFormula(inputChar)
+        }
+        else if ( getOperandNumber().length >= 15 ) {
+            resultCode = 2
         }
         else {
             // when the left side charactor is a percent(%) symbol if put a number, add multiply(*) operator symbol
             val leftSideChar:Char = getLeftSideCharFromCursor()
             if ( leftSideChar == PERCENT || leftSideChar == R_BRACKET )
                 addFormula(MULTIPLY)
+
+            addFormula(inputChar)
         }
 
-        if ( getFormula() == "0" )
-            setFormula(inputChar)
-        else
-            addFormula(inputChar)
+        return resultCode
     }
 
     fun putOperator(operator:Char) {
@@ -162,11 +169,20 @@ class FormulaManager {
         }
     }
 
-    fun getFormula():String {
-        return txtFormula.text.toString()
+    fun getOperandNumber():String {
+        val cursorPosition:Array<Int> = getCursorPosition()
+        return StringUtil.getNumberUnit(getStringFormula(), cursorPosition[0])
+    }
+
+    fun getStringFormula():String {
+        return toString()
+    }
+
+    fun getFormula(): Editable {
+        return txtFormula.text
     }
     override fun toString():String {
-        return txtFormula.text.toString()
+        return getFormula().toString()
     }
 
 }

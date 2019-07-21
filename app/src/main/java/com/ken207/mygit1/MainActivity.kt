@@ -50,7 +50,13 @@ class MainActivity : AppCompatActivity() {
 
     //
     private fun putNumber(inputChar:Char) {
-        formulaMng.putNumber(inputChar)
+        var resultCode:Int = formulaMng.putNumber(inputChar)
+        if ( resultCode == 1 ) {
+            Toast.makeText(this, "0을 시작값으로 입력할 수 있습니다.", Toast.LENGTH_LONG).show()
+        }
+        else if ( resultCode == 2 ) {
+            Toast.makeText(this, "15자리 이상으로 입력할 수 없습니다.", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun putOperator(operator:Char) {

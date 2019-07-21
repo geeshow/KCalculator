@@ -25,6 +25,28 @@ class  StringUtil {
             return changeUnit.toString()
         }
 
+        fun getNumberUnit(strFormula: String, idxCursor: Int): String {
+            if ( idxCursor == 0 )
+                return ""
+
+            var startIdx: Int = idxCursor
+            var endIdx: Int = idxCursor
+            val leftSideChar = strFormula[idxCursor-1]
+            val rightSideChar = if (strFormula.length <= idxCursor) ' ' else strFormula[idxCursor]
+
+            if (rightSideChar in arrayOf('0','1','2','3','4','5','6','7','8','9') ) {
+                if (leftSideChar in arrayOf('0','1','2','3','4','5','6','7','8','9') )
+                    startIdx = strFormula.lastIndexOfAny(charArrayOf(MULTIPLY, DIVIDE, PLUS, MINUS, L_BRACKET, R_BRACKET, PERCENT), idxCursor - 1) + 1
+
+                endIdx = strFormula.indexOfAny(charArrayOf(MULTIPLY, DIVIDE, PLUS, MINUS, L_BRACKET, R_BRACKET, PERCENT), idxCursor).coerceAtLeast(idxCursor+1)
+            }
+            else if (leftSideChar in arrayOf('0','1','2','3','4','5','6','7','8','9') ) {
+                startIdx = strFormula.lastIndexOfAny(charArrayOf(MULTIPLY, DIVIDE, PLUS, MINUS, L_BRACKET, R_BRACKET), idxCursor - 1) + 1
+            }
+
+            return strFormula.substring(startIdx, endIdx)
+        }
+
         fun getSelectedUnitPosition(strFormula: String, idxCursor: Int): Array<Int> {
 
             var startIdx: Int = idxCursor
