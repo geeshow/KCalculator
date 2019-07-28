@@ -1,29 +1,33 @@
 package com.ken207.mygit1
 
 import android.content.Context
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
-
+import android.text.InputType
+import android.widget.EditText
+import androidx.annotation.RequiresApi
 
 class MainActivity : AppCompatActivity() {
     lateinit private var formulaMng:FormulaManager
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(txtFormula, 0)
 
         listOf(btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btnMulti, btnMinus, btnPlus, btnNegative, btnDecimal, btnEqual,btnClean,btnBracket,btnPercent,btnDivide, btnDelete).forEach {
             it.setOnClickListener { clickButton(it) }
         }
 
-        formulaMng = FormulaManager(txtFormula)
+        formulaMng = FormulaManager(txtFormula as MyEditText)
+
+        txtFormula.showSoftInputOnFocus = false
+        txtFormula.requestFocus()
     }
 
     private fun clickButton(btnNum: View) {
@@ -42,13 +46,13 @@ class MainActivity : AppCompatActivity() {
             R.id.btnMinus -> putOperator(MINUS)
             R.id.btnPlus -> putOperator(PLUS)
             R.id.btnNegative -> setNegative()
-            R.id.btnDecimal -> putOperator(DIGIT)
+            R.id.btnDecimal -> putDigit()
             R.id.btnEqual -> doCalculate()
             R.id.btnClean -> doClean()
             R.id.btnBracket -> setBracket()
             R.id.btnPercent -> setPercent()
             R.id.btnDivide -> putOperator(DIVIDE)
-            R.id.btnDelete -> doDelete()
+            R.id.btnDelete -> doBackspace()
             else -> Toast.makeText(this@MainActivity, R.string.notImplemented, Toast.LENGTH_LONG).show()
         }
     }
@@ -66,6 +70,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun putOperator(operator:Char) {
         formulaMng.putOperator(operator)
+    }
+
+    private fun putDigit() {
+        formulaMng.putDigit()
     }
 
     private fun setNegative() {
@@ -90,8 +98,8 @@ class MainActivity : AppCompatActivity() {
         formulaMng.setPercent()
     }
 
-    private fun doDelete() {
-        formulaMng.doDelete()
+    private fun doBackspace() {
+        formulaMng.doBackspace()
     }
 
 }

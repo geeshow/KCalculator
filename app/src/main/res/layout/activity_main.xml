@@ -8,7 +8,7 @@
         android:fitsSystemWindows="true"
         tools:context=".MainActivity">
 
-    <EditText
+    <com.ken207.mygit1.MyEditText
             android:id="@+id/txtFormula"
             android:layout_width="0dp" android:layout_height="wrap_content" android:layout_margin="8dp"
             android:gravity="end"
@@ -18,7 +18,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent" tools:text="123" android:textColorLink="#00EB0909"
-            android:fitsSystemWindows="true"
             android:textColor="#333"
             app:fontFamily="@font/aclonica" android:inputType="textMultiLine"/>
 

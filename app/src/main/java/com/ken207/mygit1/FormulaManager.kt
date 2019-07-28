@@ -32,7 +32,7 @@ class FormulaManager {
     private fun getRightSideCharFromCursor():Char {
         if ( isCursorAtTheClose() )
             return ' '
-        return getFormula().get(txtFormula.getSelectionStart() - 1)
+        return getFormula().get(txtFormula.getSelectionStart() + 1)
     }
 
     private fun getCursorPosition():Array<Int> {
@@ -67,7 +67,7 @@ class FormulaManager {
         else if ( getStringFormula() == "0" ) {
             setFormula(inputChar)
         }
-        else if ( getOperandNumber().length >= 15 ) {
+        else if ( getOperandNumber().length >= 18 ) {
             resultCode = 2
         }
         else {
@@ -103,6 +103,30 @@ class FormulaManager {
         addFormula(operator, cursorPosition[START_CURSOR_POSITION], cursorPosition[END_CURSOR_POSITION])
     }
 
+    fun putDigit():Int {
+        var resultCode:Int = 0
+
+        var operand:String = getOperandNumber()
+        if ( operand.length >= 18 ) {
+            resultCode = 2
+        }
+        else {
+            // when the left side charactor is a percent(%) symbol if put a number, add multiply(*) operator symbol
+            var unitPosition:Array<Int> = StringUtil.getNumberUnitPosition(txtFormula.getText().toString(), getCursorPosition()[0])
+            doDelete('.', unitPosition[0], unitPosition[1])
+
+            if ( isCursorAtTheHead() ) {
+                addFormula("0.")
+            }
+            else if ( !isOperand(getLeftSideCharFromCursor()) )
+                addFormula("0.")
+            else
+                addFormula(DIGIT)
+        }
+
+        return resultCode
+    }
+
     fun setBracket() {
         var whichBracket:Char = L_BRACKET // "("
 
@@ -136,6 +160,8 @@ class FormulaManager {
                 return
             else if ( leftSideChar == L_BRACKET ) // '('
                 return
+            else if ( isOperand(getRightSideCharFromCursor()) )
+                return
             else
                 addFormula(PERCENT)
         }
@@ -160,13 +186,30 @@ class FormulaManager {
         return false
     }
 
-    fun doDelete() {
-        var idxSelectionStart:Int = txtFormula.getSelectionStart()
-        var idxSelectionEnd = txtFormula.getSelectionEnd()
+    private fun isOperand(char:Char):Boolean {
+        if ( char in '0' .. '9')
+            return true
+        else if ( char in setOf(',','.','%'))
+            return true
 
-        if ( idxSelectionStart > 0 ) {
-            txtFormula.getText().replace(idxSelectionStart - 1, idxSelectionEnd, "")
+        return false
+    }
+
+    fun doBackspace() {
+        doDelete(txtFormula.getSelectionStart() - 1, txtFormula.getSelectionEnd());
+    }
+
+    fun doDelete(idxSelectionStart:Int=txtFormula.getSelectionStart(), idxSelectionEnd:Int=txtFormula.getSelectionEnd()) {
+        if ( idxSelectionStart >= 0 ) {
+            txtFormula.getText().replace(idxSelectionStart, idxSelectionEnd, "")
         }
+    }
+
+    fun doDelete(chrTarget:Char, idxStart:Int=txtFormula.getSelectionStart(), idxEnd:Int=txtFormula.getSelectionEnd()) {
+        var targetIdx:Int = txtFormula.getText().indexOf(chrTarget.toString(), idxStart)
+
+        if ( targetIdx > -1 && targetIdx <= idxEnd )
+            doDelete(targetIdx, targetIdx+1)
     }
 
     fun getOperandNumber():String {
