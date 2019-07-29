@@ -12,8 +12,8 @@ class Calculator {
 
     }
 
-    fun calc(infixFormula:String): Operand? {
-        val arrPostfix:ArrayList<String> = changeInfixToPostfix(infixFormula)
+    fun calc(arrInfix:ArrayList<String>): Operand? {
+        val arrPostfix:ArrayList<String> = changeInfixToPostfix(arrInfix)
         val arrStackForCalculator:Stack<Operand> = Stack()
         var operand:BigDecimal = BigDecimal.ZERO
 
@@ -49,11 +49,6 @@ class Calculator {
         }
 
         return sbPostFix.toString()
-    }
-
-    private fun changeInfixToPostfix(infixFormula:String):ArrayList<String> {
-        val arrInfix: ArrayList<String> = StringUtil.splitStringToArray(infixFormula)
-        return changeInfixToPostfix(arrInfix)
     }
 
     private fun changeInfixToPostfix(arrInfix:ArrayList<String>):ArrayList<String> {

@@ -2,16 +2,20 @@ package com.ken207.mygit1
 
 import android.text.Editable
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.math.MathUtils
 import kotlinx.android.synthetic.main.activity_main.*
 
 class FormulaManager {
     var txtFormula: EditText
+    var txtRslt: TextView
     private val START_CURSOR_POSITION:Int = 0
     private val END_CURSOR_POSITION:Int = 1
 
-    constructor(txtFormula: EditText) {
+    constructor(txtFormula: EditText, txtRslt: TextView) {
         this.txtFormula = txtFormula
+        this.txtRslt = txtRslt
         setFormula("0")
     }
 
@@ -32,7 +36,7 @@ class FormulaManager {
     private fun getRightSideCharFromCursor():Char {
         if ( isCursorAtTheClose() )
             return ' '
-        return getFormula().get(txtFormula.getSelectionStart() + 1)
+        return getFormula().get(txtFormula.getSelectionStart())
     }
 
     private fun getCursorPosition():Array<Int> {
@@ -95,7 +99,8 @@ class FormulaManager {
         }
 
         if ( !isCursorAtTheClose() ) {
-            if ( isOperator(getRightSideCharFromCursor()) ) {
+            val rightSideChar:Char = getRightSideCharFromCursor()
+            if ( isOperator(rightSideChar) ) {
                 cursorPosition[END_CURSOR_POSITION]++
             }
         }
@@ -114,6 +119,7 @@ class FormulaManager {
             // when the left side charactor is a percent(%) symbol if put a number, add multiply(*) operator symbol
             var unitPosition:Array<Int> = StringUtil.getNumberUnitPosition(txtFormula.getText().toString(), getCursorPosition()[0])
             doDelete('.', unitPosition[0], unitPosition[1])
+            doDelete('0', unitPosition[0], unitPosition[0])
 
             if ( isCursorAtTheHead() ) {
                 addFormula("0.")
@@ -148,8 +154,6 @@ class FormulaManager {
     }
 
     fun setPercent() {
-        var whichBracket:Char = L_BRACKET // "("
-
         if ( isCursorAtTheHead() ) {
             return
         }
@@ -175,8 +179,13 @@ class FormulaManager {
         addFormula(operand, unitPosition[0], unitPosition[1])
     }
 
-    fun calc():String {
-        return Calculator().calc(toString()).toString()
+    fun doCalculate() {
+        try {
+            val arrInfix: ArrayList<String> = StringUtil.splitStringToArray(toString())
+            val result:String = Calculator().calc(arrInfix).toString()
+            txtRslt.setText(result)
+        } catch (e:Exception) {
+        }
     }
 
     private fun isOperator(char:Char):Boolean {

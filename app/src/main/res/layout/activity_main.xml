@@ -14,12 +14,13 @@
             android:gravity="end"
             android:textSize="36sp"
             android:text="@string/defaultResult"
+            android:inputType="textMultiLine"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent" tools:text="123" android:textColorLink="#00EB0909"
             android:textColor="#333"
-            app:fontFamily="@font/aclonica" android:inputType="textMultiLine"/>
+            app:fontFamily="@font/aclonica"/>
 
     <TextView
             android:id="@+id/txtRslt"

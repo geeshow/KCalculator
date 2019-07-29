@@ -1,6 +1,9 @@
 package com.ken207.mygit1
 
+import android.icu.lang.UCharacter
 import java.lang.StringBuilder
+import java.text.DecimalFormat
+import java.text.NumberFormat
 
 class  StringUtil {
 
@@ -160,6 +163,7 @@ class  StringUtil {
                             sbOperand.clear()
                         }
                     }
+                    ',' -> {}
                     '-' -> {
                         var isMinusOperator:Boolean = false
                         when ( previousOne ) {
@@ -180,6 +184,56 @@ class  StringUtil {
                 previousOne = it
             }
             return arrInfix
+        }
+
+        fun setCurrencyPattern(infixFormula:String): String {
+            val sbPatternFormula: StringBuilder = StringBuilder()
+            val sbOperand: StringBuilder = StringBuilder()
+            var isPoint:Boolean = false
+
+            infixFormula.forEachIndexed { index, it ->
+                when (it) {
+                    in '0' .. '9' -> {
+                        if ( isPoint ) {
+                            sbPatternFormula.append(it.toString())
+                        }
+                        else {
+                            sbOperand.append(it)
+                            if (infixFormula.lastIndex == index || infixFormula[index + 1] !in '0'..'9' || infixFormula[index + 1] == '.') {
+                                sbPatternFormula.append(setFormat(sbOperand.toString()))
+                                sbOperand.clear()
+                            }
+                        }
+                    }
+                    ',' -> {}
+                    '.' -> {
+                        isPoint = true
+                        sbPatternFormula.append(it.toString())
+                    }
+                    else -> {
+                        isPoint = false
+                        sbPatternFormula.append(it.toString())
+                    }
+                }
+            }
+            return sbPatternFormula.toString()
+        }
+
+        fun setFormat(unit:String):String {
+            val digitIndex:Int = unit.indexOf('.') - 1
+            var sbUnit:StringBuilder = StringBuilder()
+
+            unit.forEachIndexed { index, c ->
+                if ( index % 3 == digitIndex ) {
+
+                }
+            }
+            val nf = NumberFormat.getCurrencyInstance()
+            val decimalFormatSymbols = (nf as DecimalFormat).getDecimalFormatSymbols()
+            decimalFormatSymbols.setCurrencySymbol("")
+            decimalFormatSymbols.digit = '.'
+            (nf as DecimalFormat).setDecimalFormatSymbols(decimalFormatSymbols)
+            return nf.format(unit.toDouble())
         }
     }
 }

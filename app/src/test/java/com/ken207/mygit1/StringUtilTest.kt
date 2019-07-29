@@ -7,6 +7,20 @@ import org.junit.Assert.*
 class StringUtilTest {
 
     @Test
+    fun getSelectedOperand2() {
+        assertEquals("1", StringUtil.setCurrencyPattern("1"))
+        assertEquals("12", StringUtil.setCurrencyPattern("12"))
+        assertEquals("123", StringUtil.setCurrencyPattern("123"))
+        assertEquals("1,234", StringUtil.setCurrencyPattern("1234"))
+        assertEquals("12,345", StringUtil.setCurrencyPattern("12345"))
+        assertEquals("123,456", StringUtil.setCurrencyPattern("123456"))
+        assertEquals("1,234,567", StringUtil.setCurrencyPattern("1234567"))
+        assertEquals("-12,345", StringUtil.setCurrencyPattern("-12345"))
+        assertEquals("12,345", StringUtil.setCurrencyPattern("0012345"))
+        assertEquals("1,234.5", StringUtil.setFormat("1234.5"))
+    }
+
+    @Test
     fun getSelectedOperand() {
         assertEquals( "(-3)",StringUtil.toggleNegative("3"))
         assertEquals( "3",StringUtil.toggleNegative("(-3)"))

@@ -4,11 +4,13 @@ import android.content.Context
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import android.text.InputType
+import android.text.TextWatcher
 import android.widget.EditText
 import androidx.annotation.RequiresApi
 
@@ -20,14 +22,27 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        formulaMng = FormulaManager(txtFormula as MyEditText, txtRslt)
+        txtFormula.showSoftInputOnFocus = false
+        txtFormula.requestFocus()
+
         listOf(btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btnMulti, btnMinus, btnPlus, btnNegative, btnDecimal, btnEqual,btnClean,btnBracket,btnPercent,btnDivide, btnDelete).forEach {
             it.setOnClickListener { clickButton(it) }
         }
 
-        formulaMng = FormulaManager(txtFormula as MyEditText)
+        txtFormula.addTextChangedListener(object:TextWatcher {
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
 
-        txtFormula.showSoftInputOnFocus = false
-        txtFormula.requestFocus()
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                formulaMng.doCalculate()
+            }
+
+        })
     }
 
     private fun clickButton(btnNum: View) {
@@ -81,9 +96,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun doCalculate() {
-        txtRslt.setText(
-            formulaMng.calc()
-        )
+        formulaMng.doCalculate()
     }
 
     private fun doClean() {
